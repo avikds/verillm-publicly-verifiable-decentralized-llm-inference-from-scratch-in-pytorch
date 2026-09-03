@@ -1026,8 +1026,17 @@ def reward_honest_participants(
 
     return new_balances
 
-# Step 53 - slash_worker (not yet solved)
-# TODO: implement
+# Step 53 - slash_worker
+def slash_worker(balances, worker_id, slash_amount):
+    # Copy the balances so the input dictionary is not mutated.
+    new_balances = dict(balances)
+
+    # Treat a missing worker balance as 0.0.
+    new_balances[worker_id] = (
+        new_balances.get(worker_id, 0.0) - slash_amount
+    )
+
+    return new_balances
 
 # Step 54 - assign_dual_role (not yet solved)
 # TODO: implement
