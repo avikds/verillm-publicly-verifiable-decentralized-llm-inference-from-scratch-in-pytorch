@@ -11,7 +11,7 @@ python scaffold.py
 ## Steps
 
 - [x] **1.** build_char_vocab
-- [ ] **2.** encode_string
+- [x] **2.** encode_string
 - [ ] **3.** decode_ids
 - [ ] **4.** embed_tokens
 - [ ] **5.** add_positional_embeddings
