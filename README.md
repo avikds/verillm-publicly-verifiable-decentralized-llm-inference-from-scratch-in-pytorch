@@ -16,7 +16,7 @@ python scaffold.py
 - [x] **4.** embed_tokens
 - [x] **5.** add_positional_embeddings
 - [x] **6.** linear_projection
-- [ ] **7.** compute_attention_scores
+- [x] **7.** compute_attention_scores
 - [ ] **8.** scale_attention_scores
 - [ ] **9.** apply_causal_mask
 - [ ] **10.** softmax_attention_weights
