@@ -27,8 +27,11 @@ def encode_string(text, vocab):
     # Convert each character to its corresponding token ID.
     return [vocab["stoi"][ch] for ch in text]
 
-# Step 3 - decode_ids (not yet solved)
-# TODO: implement
+# Step 3 - decode_ids
+def decode_ids(ids, vocab):
+    # Convert each token ID back to its corresponding character
+    # and join them into a single string.
+    return "".join(vocab["itos"][i] for i in ids)
 
 # Step 4 - embed_tokens (not yet solved)
 # TODO: implement

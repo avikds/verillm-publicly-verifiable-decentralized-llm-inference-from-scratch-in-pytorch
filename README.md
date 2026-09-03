@@ -12,7 +12,7 @@ python scaffold.py
 
 - [x] **1.** build_char_vocab
 - [x] **2.** encode_string
-- [ ] **3.** decode_ids
+- [x] **3.** decode_ids
 - [ ] **4.** embed_tokens
 - [ ] **5.** add_positional_embeddings
 - [ ] **6.** linear_projection
