@@ -43,7 +43,7 @@ python scaffold.py
 - [x] **31.** hash_pair
 - [x] **32.** build_merkle_level
 - [x] **33.** build_merkle_tree
-- [ ] **34.** merkle_root
+- [x] **34.** merkle_root
 - [ ] **35.** merkle_inclusion_proof
 - [ ] **36.** verify_merkle_inclusion_proof
 - [ ] **37.** run_prover

@@ -566,8 +566,10 @@ def build_merkle_tree(leaves):
 
     return tree
 
-# Step 34 - merkle_root (not yet solved)
-# TODO: implement
+# Step 34 - merkle_root
+def merkle_root(tree):
+    # The root is the single digest at the top level.
+    return tree[-1][0]
 
 # Step 35 - merkle_inclusion_proof (not yet solved)
 # TODO: implement
