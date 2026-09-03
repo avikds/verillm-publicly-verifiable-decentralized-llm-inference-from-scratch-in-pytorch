@@ -682,8 +682,20 @@ def assemble_public_transcript(prover_result, prompt_ids):
         "step_states": step_states_copy,
     }
 
-# Step 39 - sample_audit_positions (not yet solved)
-# TODO: implement
+# Step 39 - sample_audit_positions
+import random
+
+def sample_audit_positions(seed, num_steps, k):
+    # Handle the empty-sample case.
+    if k == 0:
+        return []
+
+    # Sample k distinct positions deterministically from the public seed.
+    rng = random.Random(seed)
+    positions = rng.sample(range(num_steps), k)
+
+    # Return positions in canonical ascending order.
+    return sorted(positions)
 
 # Step 40 - reexecute_audited_step (not yet solved)
 # TODO: implement

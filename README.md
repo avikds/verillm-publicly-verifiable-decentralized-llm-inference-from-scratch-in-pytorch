@@ -48,7 +48,7 @@ python scaffold.py
 - [x] **36.** verify_merkle_inclusion_proof
 - [x] **37.** run_prover
 - [x] **38.** assemble_public_transcript
-- [ ] **39.** sample_audit_positions
+- [x] **39.** sample_audit_positions
 - [ ] **40.** reexecute_audited_step
 - [ ] **41.** recompute_step_commitment
 - [ ] **42.** check_commitment_against_proof
