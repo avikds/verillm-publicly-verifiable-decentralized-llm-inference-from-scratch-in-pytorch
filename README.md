@@ -41,7 +41,7 @@ python scaffold.py
 - [x] **29.** hash_tensor
 - [x] **30.** commit_decode_step
 - [x] **31.** hash_pair
-- [ ] **32.** build_merkle_level
+- [x] **32.** build_merkle_level
 - [ ] **33.** build_merkle_tree
 - [ ] **34.** merkle_root
 - [ ] **35.** merkle_inclusion_proof

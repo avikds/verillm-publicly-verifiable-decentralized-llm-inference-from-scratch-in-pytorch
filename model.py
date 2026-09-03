@@ -531,8 +531,24 @@ def hash_pair(left_digest, right_digest):
     """Hash two child digests into a single parent digest."""
     return hashlib.sha256(left_digest + right_digest).digest()
 
-# Step 32 - build_merkle_level (not yet solved)
-# TODO: implement
+# Step 32 - build_merkle_level
+def build_merkle_level(nodes):
+    # Return an empty level when there are no nodes.
+    if not nodes:
+        return []
+
+    parents = []
+
+    # Process adjacent pairs from left to right.
+    for i in range(0, len(nodes), 2):
+        left = nodes[i]
+
+        # Duplicate the final node when the number of nodes is odd.
+        right = nodes[i + 1] if i + 1 < len(nodes) else left
+
+        parents.append(hash_pair(left, right))
+
+    return parents
 
 # Step 33 - build_merkle_tree (not yet solved)
 # TODO: implement
