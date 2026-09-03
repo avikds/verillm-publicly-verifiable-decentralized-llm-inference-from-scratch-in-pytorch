@@ -58,7 +58,7 @@ python scaffold.py
 - [x] **46.** detection_probability
 - [x] **47.** verifier_cost_fraction
 - [x] **48.** show_tampered_transcript_rejected
-- [ ] **49.** sample_verifier_committee
+- [x] **49.** sample_verifier_committee
 - [ ] **50.** collect_verifier_votes
 - [ ] **51.** aggregate_votes_majority
 - [ ] **52.** reward_honest_participants

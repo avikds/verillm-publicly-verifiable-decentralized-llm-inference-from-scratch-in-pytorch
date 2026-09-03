@@ -940,8 +940,13 @@ def show_tampered_transcript_rejected(
         "rejected": rejected,
     }
 
-# Step 49 - sample_verifier_committee (not yet solved)
-# TODO: implement
+# Step 49 - sample_verifier_committee
+def sample_verifier_committee(verifier_ids, committee_size, seed):
+    # Use a local RNG so the caller's global random state is not modified.
+    rng = random.Random(seed)
+
+    # Sample distinct verifier IDs without modifying the input list.
+    return rng.sample(list(verifier_ids), committee_size)
 
 # Step 50 - collect_verifier_votes (not yet solved)
 # TODO: implement
