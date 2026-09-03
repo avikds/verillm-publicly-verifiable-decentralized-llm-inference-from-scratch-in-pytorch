@@ -658,8 +658,29 @@ def run_prover(model_params, prompt_ids, num_steps):
         "leaves": leaves,
     }
 
-# Step 38 - assemble_public_transcript (not yet solved)
-# TODO: implement
+# Step 38 - assemble_public_transcript
+def assemble_public_transcript(prover_result, prompt_ids):
+    # Copy mutable input sequences so the public transcript is independent
+    # of the prover result and original prompt list.
+    prompt_ids_copy = list(prompt_ids)
+    output_tokens_copy = list(prover_result["output_tokens"])
+    leaves_copy = list(prover_result["leaves"])
+    step_states_copy = list(prover_result["step_states"])
+
+    # Build the Merkle tree from the step commitments.
+    tree = build_merkle_tree(leaves_copy)
+
+    # Compute the root for non-empty transcripts.
+    root = merkle_root(tree) if tree else None
+
+    return {
+        "prompt_ids": prompt_ids_copy,
+        "output_tokens": output_tokens_copy,
+        "leaves": leaves_copy,
+        "tree": tree,
+        "root": root,
+        "step_states": step_states_copy,
+    }
 
 # Step 39 - sample_audit_positions (not yet solved)
 # TODO: implement
