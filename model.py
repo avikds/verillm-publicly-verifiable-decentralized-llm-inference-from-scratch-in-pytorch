@@ -1,0 +1,192 @@
+"""
+VeriLLM: Publicly Verifiable Decentralized LLM Inference from Scratch in PyTorch
+
+Assembled from your step-by-step solutions.
+"""
+
+import numpy as np
+
+# Step 1 - build_char_vocab
+def build_char_vocab(corpus):
+    # Get all unique characters and sort them for deterministic ID assignment.
+    chars = sorted(set(corpus))
+
+    # Map each character to its integer ID.
+    stoi = {ch: i for i, ch in enumerate(chars)}
+
+    # Reverse mapping from integer ID to character.
+    itos = {i: ch for i, ch in enumerate(chars)}
+
+    return {
+        "stoi": stoi,
+        "itos": itos,
+    }
+
+# Step 2 - encode_string (not yet solved)
+# TODO: implement
+
+# Step 3 - decode_ids (not yet solved)
+# TODO: implement
+
+# Step 4 - embed_tokens (not yet solved)
+# TODO: implement
+
+# Step 5 - add_positional_embeddings (not yet solved)
+# TODO: implement
+
+# Step 6 - linear_projection (not yet solved)
+# TODO: implement
+
+# Step 7 - compute_attention_scores (not yet solved)
+# TODO: implement
+
+# Step 8 - scale_attention_scores (not yet solved)
+# TODO: implement
+
+# Step 9 - apply_causal_mask (not yet solved)
+# TODO: implement
+
+# Step 10 - softmax_attention_weights (not yet solved)
+# TODO: implement
+
+# Step 11 - weighted_value_sum (not yet solved)
+# TODO: implement
+
+# Step 12 - project_qkv (not yet solved)
+# TODO: implement
+
+# Step 13 - append_kv_cache (not yet solved)
+# TODO: implement
+
+# Step 14 - scaled_dot_product_attention_with_cache (not yet solved)
+# TODO: implement
+
+# Step 15 - apply_output_projection (not yet solved)
+# TODO: implement
+
+# Step 16 - single_head_causal_self_attention (not yet solved)
+# TODO: implement
+
+# Step 17 - ffn_first_layer_gelu (not yet solved)
+# TODO: implement
+
+# Step 18 - ffn_second_layer (not yet solved)
+# TODO: implement
+
+# Step 19 - position_wise_feed_forward (not yet solved)
+# TODO: implement
+
+# Step 20 - compute_mean_variance (not yet solved)
+# TODO: implement
+
+# Step 21 - layer_norm_apply (not yet solved)
+# TODO: implement
+
+# Step 22 - residual_add_and_norm (not yet solved)
+# TODO: implement
+
+# Step 23 - transformer_block (not yet solved)
+# TODO: implement
+
+# Step 24 - lm_head_logits (not yet solved)
+# TODO: implement
+
+# Step 25 - greedy_next_token (not yet solved)
+# TODO: implement
+
+# Step 26 - run_prefill (not yet solved)
+# TODO: implement
+
+# Step 27 - decode_step (not yet solved)
+# TODO: implement
+
+# Step 28 - generate_with_state_log (not yet solved)
+# TODO: implement
+
+# Step 29 - hash_tensor (not yet solved)
+# TODO: implement
+
+# Step 30 - commit_decode_step (not yet solved)
+# TODO: implement
+
+# Step 31 - hash_pair (not yet solved)
+# TODO: implement
+
+# Step 32 - build_merkle_level (not yet solved)
+# TODO: implement
+
+# Step 33 - build_merkle_tree (not yet solved)
+# TODO: implement
+
+# Step 34 - merkle_root (not yet solved)
+# TODO: implement
+
+# Step 35 - merkle_inclusion_proof (not yet solved)
+# TODO: implement
+
+# Step 36 - verify_merkle_inclusion_proof (not yet solved)
+# TODO: implement
+
+# Step 37 - run_prover (not yet solved)
+# TODO: implement
+
+# Step 38 - assemble_public_transcript (not yet solved)
+# TODO: implement
+
+# Step 39 - sample_audit_positions (not yet solved)
+# TODO: implement
+
+# Step 40 - reexecute_audited_step (not yet solved)
+# TODO: implement
+
+# Step 41 - recompute_step_commitment (not yet solved)
+# TODO: implement
+
+# Step 42 - check_commitment_against_proof (not yet solved)
+# TODO: implement
+
+# Step 43 - check_token_matches_claim (not yet solved)
+# TODO: implement
+
+# Step 44 - run_spot_check_verification (not yet solved)
+# TODO: implement
+
+# Step 45 - tamper_transcript_flip_token (not yet solved)
+# TODO: implement
+
+# Step 46 - detection_probability (not yet solved)
+# TODO: implement
+
+# Step 47 - verifier_cost_fraction (not yet solved)
+# TODO: implement
+
+# Step 48 - show_tampered_transcript_rejected (not yet solved)
+# TODO: implement
+
+# Step 49 - sample_verifier_committee (not yet solved)
+# TODO: implement
+
+# Step 50 - collect_verifier_votes (not yet solved)
+# TODO: implement
+
+# Step 51 - aggregate_votes_majority (not yet solved)
+# TODO: implement
+
+# Step 52 - reward_honest_participants (not yet solved)
+# TODO: implement
+
+# Step 53 - slash_worker (not yet solved)
+# TODO: implement
+
+# Step 54 - assign_dual_role (not yet solved)
+# TODO: implement
+
+# Step 55 - run_honest_round (not yet solved)
+# TODO: implement
+
+# Step 56 - run_malicious_round (not yet solved)
+# TODO: implement
+
+# Step 57 - report_end_to_end_verification_cost (not yet solved)
+# TODO: implement
+
