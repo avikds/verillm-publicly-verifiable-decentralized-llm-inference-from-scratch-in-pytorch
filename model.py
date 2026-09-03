@@ -761,8 +761,106 @@ def check_token_matches_claim(recomputed_token, claimed_token):
     # Return whether the recomputed and claimed token IDs are equal.
     return recomputed_token == claimed_token
 
-# Step 44 - run_spot_check_verification (not yet solved)
-# TODO: implement
+# Step 44 - run_spot_check_verification
+def run_spot_check_verification(transcript, model_params, seed, k):
+    """Run end-to-end spot-check verification of a prover transcript.
+
+    Returns a dict with keys 'accept', 'audited_positions', 'per_audit'.
+    """
+    num_steps = len(transcript["step_states"])
+
+    # Deterministically select the decode steps to audit.
+    audited_positions = sample_audit_positions(
+        seed,
+        num_steps,
+        k,
+    )
+
+    per_audit = []
+
+    # No audits means the verification passes vacuously.
+    if not audited_positions:
+        return {
+            "accept": True,
+            "audited_positions": audited_positions,
+            "per_audit": [],
+        }
+
+    # Re-run prefill once to recover the KV cache immediately before
+    # decode step 0.
+    prefill = run_prefill(
+        transcript["prompt_ids"],
+        model_params,
+    )
+    prefill_cache = prefill["kv_caches"]
+
+    for position in audited_positions:
+        # Recover the state immediately before this audited decode step.
+        if position == 0:
+            prior_kv_cache = prefill_cache
+            prior_token = transcript["prompt_ids"][-1]
+        else:
+            prior_kv_cache = transcript["step_states"][position - 1]["kv_caches"]
+            prior_token = transcript["output_tokens"][position - 1]
+
+        # Re-execute exactly this decode step.
+        reexec = reexecute_audited_step(
+            model_params,
+            prior_kv_cache,
+            prior_token,
+        )
+
+        # Reconstruct the logical step state that the prover committed.
+        reexec_state = {
+            "step_index": position,
+            "input_token": int(prior_token),
+            "next_token": int(reexec["token"]),
+            "logits": reexec["logits"],
+            "kv_caches": reexec["kv_cache_after"],
+            "next_pos": transcript["step_states"][position]["next_pos"],
+        }
+
+        # Recompute the expected Merkle leaf.
+        recomputed_leaf = recompute_step_commitment(
+            reexec_state,
+            prior_kv_cache,
+        )
+
+        # Obtain the prover's inclusion proof for this committed leaf.
+        proof = merkle_inclusion_proof(
+            transcript["tree"],
+            position,
+        )
+
+        # Verify the recomputed commitment under the published root.
+        commitment_ok = check_commitment_against_proof(
+            recomputed_leaf,
+            position,
+            proof,
+            transcript["root"],
+        )
+
+        # Check that the recomputed token matches the prover's claim.
+        token_ok = check_token_matches_claim(
+            reexec["token"],
+            transcript["output_tokens"][position],
+        )
+
+        per_audit.append({
+            "commitment_ok": bool(commitment_ok),
+            "token_ok": bool(token_ok),
+        })
+
+    accept = all(
+        audit["commitment_ok"] and audit["token_ok"]
+        for audit in per_audit
+    )
+
+    return {
+        "accept": bool(accept),
+        "audited_positions": audited_positions,
+        "per_audit": per_audit,
+    }
 
 # Step 45 - tamper_transcript_flip_token (not yet solved)
 # TODO: implement
