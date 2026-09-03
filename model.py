@@ -504,9 +504,6 @@ def hash_tensor(tensor):
     return hashlib.sha256(payload).digest()
 
 # Step 30 - commit_decode_step
-import hashlib
-import numpy as np
-
 def commit_decode_step(step_state):
     # Hash each scalar/token field using the same canonical tensor hashing
     # primitive used for arrays.
