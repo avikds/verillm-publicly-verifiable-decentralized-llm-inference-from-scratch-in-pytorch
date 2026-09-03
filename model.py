@@ -127,8 +127,14 @@ def weighted_value_sum(attn_weights, values):
     # Weighted sum of value vectors for each query position.
     return attn_weights @ values
 
-# Step 12 - project_qkv (not yet solved)
-# TODO: implement
+# Step 12 - project_qkv
+def project_qkv(x, attn_params):
+    # Project hidden states into query, key, and value tensors.
+    q = linear_projection(x, attn_params["Wq"], attn_params.get("bq"))
+    k = linear_projection(x, attn_params["Wk"], attn_params.get("bk"))
+    v = linear_projection(x, attn_params["Wv"], attn_params.get("bv"))
+
+    return q, k, v
 
 # Step 13 - append_kv_cache (not yet solved)
 # TODO: implement
