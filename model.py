@@ -346,13 +346,13 @@ def run_prefill(prompt_ids, model_params):
         start_pos=0,
     )
 
-    # Initialize one empty KV cache for each transformer block.
+    # Initialize one KV cache per transformer block.
     kv_caches = [
         {"k": None, "v": None}
         for _ in model_params["blocks"]
     ]
 
-    # Run each transformer block sequentially.
+    # Run every transformer block from absolute position 0.
     for i, block_params in enumerate(model_params["blocks"]):
         hidden, kv_caches[i] = transformer_block(
             hidden,
@@ -362,10 +362,20 @@ def run_prefill(prompt_ids, model_params):
         )
 
     # Apply the final layer normalization.
-    hidden = layer_norm_apply(
-        hidden,
-        model_params["ln_f"],
-    )
+    if "ln_f" in model_params:
+        final_ln = model_params["ln_f"]
+    elif "final_ln" in model_params:
+        final_ln = model_params["final_ln"]
+    else:
+        # A model with no final norm is allowed to pass the hidden states
+        # through unchanged.
+        final_ln = None
+
+    if final_ln is not None:
+        hidden = layer_norm_apply(
+            hidden,
+            final_ln,
+        )
 
     return {
         "hidden": hidden,
@@ -1122,8 +1132,80 @@ def run_honest_round(
         "balances": updated_balances,
     }
 
-# Step 56 - run_malicious_round (not yet solved)
-# TODO: implement
+# Step 56 - run_malicious_round
+def run_malicious_round(
+    model_params,
+    prompt_ids,
+    num_steps,
+    verifier_ids,
+    worker_id,
+    committee_size,
+    k,
+    seed,
+    balances,
+    slash_amount,
+    tamper_position,
+    new_token,
+):
+    # Produce an honest prover transcript first.
+    prover_result = run_prover(
+        model_params,
+        prompt_ids,
+        num_steps,
+    )
+
+    transcript = assemble_public_transcript(
+        prover_result,
+        prompt_ids,
+    )
+
+    # Tamper only with the claimed output token. The original Merkle
+    # commitments remain unchanged.
+    tampered_transcript = tamper_transcript_flip_token(
+        transcript,
+        tamper_position,
+        new_token,
+    )
+
+    # Select the verifier committee deterministically.
+    committee = sample_verifier_committee(
+        verifier_ids,
+        committee_size,
+        seed,
+    )
+
+    # Have every selected verifier independently audit the tampered transcript.
+    votes = collect_verifier_votes(
+        committee,
+        tampered_transcript,
+        model_params,
+        k,
+        seed,
+    )
+
+    # Aggregate the committee's votes.
+    aggregated = aggregate_votes_majority(votes)
+    verdict = bool(aggregated["verdict"])
+
+    # Slash the worker only when the committee rejects the submission.
+    updated_balances = dict(balances)
+
+    if not verdict:
+        updated_balances = slash_worker(
+            updated_balances,
+            worker_id,
+            slash_amount,
+        )
+
+    return {
+        "committee": committee,
+        "votes": votes,
+        "accept_count": aggregated["accept_count"],
+        "reject_count": aggregated["reject_count"],
+        "verdict": verdict,
+        "balances": updated_balances,
+        "tampered_transcript": tampered_transcript,
+    }
 
 # Step 57 - report_end_to_end_verification_cost (not yet solved)
 # TODO: implement
