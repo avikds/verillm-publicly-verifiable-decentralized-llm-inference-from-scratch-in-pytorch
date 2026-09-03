@@ -40,7 +40,7 @@ python scaffold.py
 - [x] **28.** generate_with_state_log
 - [x] **29.** hash_tensor
 - [x] **30.** commit_decode_step
-- [ ] **31.** hash_pair
+- [x] **31.** hash_pair
 - [ ] **32.** build_merkle_level
 - [ ] **33.** build_merkle_tree
 - [ ] **34.** merkle_root
