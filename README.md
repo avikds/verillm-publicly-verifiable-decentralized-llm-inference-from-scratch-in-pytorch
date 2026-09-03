@@ -63,7 +63,7 @@ python scaffold.py
 - [x] **51.** aggregate_votes_majority
 - [x] **52.** reward_honest_participants
 - [x] **53.** slash_worker
-- [ ] **54.** assign_dual_role
+- [x] **54.** assign_dual_role
 - [ ] **55.** run_honest_round
 - [ ] **56.** run_malicious_round
 - [ ] **57.** report_end_to_end_verification_cost

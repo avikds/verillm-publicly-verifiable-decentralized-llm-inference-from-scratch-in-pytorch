@@ -1038,8 +1038,25 @@ def slash_worker(balances, worker_id, slash_amount):
 
     return new_balances
 
-# Step 54 - assign_dual_role (not yet solved)
-# TODO: implement
+# Step 54 - assign_dual_role
+def assign_dual_role(node_ids, worker_id, committee_size, seed):
+    # Draw the committee deterministically using the upstream helper.
+    committee = sample_verifier_committee(
+        node_ids,
+        committee_size,
+        seed,
+    )
+
+    # Ensure the worker is also a member of the verifier committee.
+    if worker_id not in committee:
+        # Replace the last sampled verifier with the worker while
+        # preserving the requested committee size and uniqueness.
+        committee[-1] = worker_id
+
+    return {
+        "worker_id": worker_id,
+        "committee": committee,
+    }
 
 # Step 55 - run_honest_round (not yet solved)
 # TODO: implement
