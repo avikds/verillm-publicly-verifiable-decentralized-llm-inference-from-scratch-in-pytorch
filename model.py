@@ -902,8 +902,10 @@ def detection_probability(num_steps, num_corrupted, k):
 
     return float(1.0 - probability_no_detection)
 
-# Step 47 - verifier_cost_fraction (not yet solved)
-# TODO: implement
+# Step 47 - verifier_cost_fraction
+def verifier_cost_fraction(num_steps, k):
+    # Fraction of the full decode work that is re-executed by the verifier.
+    return float(k / num_steps)
 
 # Step 48 - show_tampered_transcript_rejected (not yet solved)
 # TODO: implement

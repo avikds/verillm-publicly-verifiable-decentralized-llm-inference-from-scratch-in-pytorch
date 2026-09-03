@@ -56,7 +56,7 @@ python scaffold.py
 - [x] **44.** run_spot_check_verification
 - [x] **45.** tamper_transcript_flip_token
 - [x] **46.** detection_probability
-- [ ] **47.** verifier_cost_fraction
+- [x] **47.** verifier_cost_fraction
 - [ ] **48.** show_tampered_transcript_rejected
 - [ ] **49.** sample_verifier_committee
 - [ ] **50.** collect_verifier_votes
