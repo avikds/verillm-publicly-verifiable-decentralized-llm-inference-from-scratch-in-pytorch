@@ -28,7 +28,7 @@ python scaffold.py
 - [x] **16.** single_head_causal_self_attention
 - [x] **17.** ffn_first_layer_gelu
 - [x] **18.** ffn_second_layer
-- [ ] **19.** position_wise_feed_forward
+- [x] **19.** position_wise_feed_forward
 - [ ] **20.** compute_mean_variance
 - [ ] **21.** layer_norm_apply
 - [ ] **22.** residual_add_and_norm

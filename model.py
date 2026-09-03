@@ -232,8 +232,13 @@ def ffn_second_layer(h, ffn_params):
         ffn_params.get("b2"),
     )
 
-# Step 19 - position_wise_feed_forward (not yet solved)
-# TODO: implement
+# Step 19 - position_wise_feed_forward
+def position_wise_feed_forward(x, ffn_params):
+    # Apply the first FFN layer followed by GELU activation.
+    h = ffn_first_layer_gelu(x, ffn_params)
+
+    # Project the activated hidden representation back to d_model.
+    return ffn_second_layer(h, ffn_params)
 
 # Step 20 - compute_mean_variance (not yet solved)
 # TODO: implement
