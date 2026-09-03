@@ -15,7 +15,7 @@ python scaffold.py
 - [x] **3.** decode_ids
 - [x] **4.** embed_tokens
 - [x] **5.** add_positional_embeddings
-- [ ] **6.** linear_projection
+- [x] **6.** linear_projection
 - [ ] **7.** compute_attention_scores
 - [ ] **8.** scale_attention_scores
 - [ ] **9.** apply_causal_mask

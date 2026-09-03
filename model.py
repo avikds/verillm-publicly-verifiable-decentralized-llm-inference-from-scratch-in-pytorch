@@ -55,8 +55,17 @@ def add_positional_embeddings(token_embeds, pos_embedding, start_pos=0):
     T = token_embeds.shape[0]
     return token_embeds + pos_embedding[start_pos:start_pos + T]
 
-# Step 6 - linear_projection (not yet solved)
-# TODO: implement
+# Step 6 - linear_projection
+import numpy as np
+
+def linear_projection(x, weight, bias=None):
+    """Affine map y = x @ weight + bias used throughout the transformer."""
+    y = x @ weight
+
+    if bias is not None:
+        y = y + bias
+
+    return y
 
 # Step 7 - compute_attention_scores (not yet solved)
 # TODO: implement
