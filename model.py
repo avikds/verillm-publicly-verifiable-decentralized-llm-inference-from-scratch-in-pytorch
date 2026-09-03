@@ -550,8 +550,21 @@ def build_merkle_level(nodes):
 
     return parents
 
-# Step 33 - build_merkle_tree (not yet solved)
-# TODO: implement
+# Step 33 - build_merkle_tree
+def build_merkle_tree(leaves):
+    # The first level is the leaf list itself.
+    if not leaves:
+        return []
+
+    tree = [list(leaves)]
+    current_level = tree[0]
+
+    # Continue building levels until only the Merkle root remains.
+    while len(current_level) > 1:
+        current_level = build_merkle_level(current_level)
+        tree.append(current_level)
+
+    return tree
 
 # Step 34 - merkle_root (not yet solved)
 # TODO: implement
