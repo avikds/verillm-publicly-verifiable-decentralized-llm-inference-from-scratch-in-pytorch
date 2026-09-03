@@ -52,7 +52,7 @@ python scaffold.py
 - [x] **40.** reexecute_audited_step
 - [x] **41.** recompute_step_commitment
 - [x] **42.** check_commitment_against_proof
-- [ ] **43.** check_token_matches_claim
+- [x] **43.** check_token_matches_claim
 - [ ] **44.** run_spot_check_verification
 - [ ] **45.** tamper_transcript_flip_token
 - [ ] **46.** detection_probability
