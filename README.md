@@ -34,7 +34,7 @@ python scaffold.py
 - [x] **22.** residual_add_and_norm
 - [x] **23.** transformer_block
 - [x] **24.** lm_head_logits
-- [ ] **25.** greedy_next_token
+- [x] **25.** greedy_next_token
 - [ ] **26.** run_prefill
 - [ ] **27.** decode_step
 - [ ] **28.** generate_with_state_log

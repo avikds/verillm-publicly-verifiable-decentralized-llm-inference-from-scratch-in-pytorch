@@ -322,8 +322,13 @@ def lm_head_logits(hidden, lm_head_params):
         lm_head_params.get("b"),
     )
 
-# Step 25 - greedy_next_token (not yet solved)
-# TODO: implement
+# Step 25 - greedy_next_token
+def greedy_next_token(logits):
+    # Use the final logits row when a sequence of logits is provided.
+    last_logits = logits[-1] if np.ndim(logits) == 2 else logits
+
+    # Return the selected token ID as a plain Python int.
+    return int(np.argmax(last_logits))
 
 # Step 26 - run_prefill (not yet solved)
 # TODO: implement
