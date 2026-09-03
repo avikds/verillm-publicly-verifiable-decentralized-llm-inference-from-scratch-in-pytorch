@@ -95,8 +95,32 @@ def apply_causal_mask(scores, query_offset=0):
 
     return masked_scores
 
-# Step 10 - softmax_attention_weights (not yet solved)
-# TODO: implement
+# Step 10 - softmax_attention_weights
+def softmax_attention_weights(masked_scores):
+    """Convert masked attention scores to a probability distribution via softmax over the last axis."""
+    scores = np.asarray(masked_scores, dtype=float)
+
+    # Subtract the row-wise maximum for numerical stability.
+    row_max = np.max(scores, axis=-1, keepdims=True)
+
+    # Rows containing only -inf need special handling because
+    # (-inf) - (-inf) produces NaN.
+    finite_row_max = np.where(np.isfinite(row_max), row_max, 0.0)
+
+    exp_scores = np.exp(scores - finite_row_max)
+
+    # Masked positions (-inf) should have exactly zero weight.
+    exp_scores = np.where(np.isfinite(scores), exp_scores, 0.0)
+
+    row_sums = np.sum(exp_scores, axis=-1, keepdims=True)
+
+    # For an all--inf row, return zeros rather than NaNs.
+    return np.divide(
+        exp_scores,
+        row_sums,
+        out=np.zeros_like(exp_scores),
+        where=row_sums != 0,
+    )
 
 # Step 11 - weighted_value_sum (not yet solved)
 # TODO: implement
