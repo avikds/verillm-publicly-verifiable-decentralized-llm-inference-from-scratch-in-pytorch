@@ -727,8 +727,34 @@ def recompute_step_commitment(reexec_state, prior_kv_cache):
     # Reuse the exact same commitment primitive used by the prover.
     return commit_decode_step(reexec_state)
 
-# Step 42 - check_commitment_against_proof (not yet solved)
-# TODO: implement
+# Step 42 - check_commitment_against_proof
+def check_commitment_against_proof(recomputed_leaf, leaf_index, proof, root):
+    """Verify a recomputed leaf against a Merkle root and inclusion proof."""
+    current = recomputed_leaf
+
+    for entry in proof:
+        sibling = entry["sibling"]
+
+        # Step 35 emits `is_right=True` when the sibling is on the right
+        # of the current node.
+        if "is_right" in entry:
+            if entry["is_right"]:
+                current = hash_pair(current, sibling)
+            else:
+                current = hash_pair(sibling, current)
+
+        # Also support the `side` format described by Step 36.
+        elif "side" in entry:
+            if entry["side"] == "right":
+                current = hash_pair(current, sibling)
+            elif entry["side"] == "left":
+                current = hash_pair(sibling, current)
+            else:
+                return False
+        else:
+            return False
+
+    return current == root
 
 # Step 43 - check_token_matches_claim (not yet solved)
 # TODO: implement
