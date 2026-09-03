@@ -61,7 +61,7 @@ python scaffold.py
 - [x] **49.** sample_verifier_committee
 - [x] **50.** collect_verifier_votes
 - [x] **51.** aggregate_votes_majority
-- [ ] **52.** reward_honest_participants
+- [x] **52.** reward_honest_participants
 - [ ] **53.** slash_worker
 - [ ] **54.** assign_dual_role
 - [ ] **55.** run_honest_round
