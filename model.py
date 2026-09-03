@@ -240,8 +240,13 @@ def position_wise_feed_forward(x, ffn_params):
     # Project the activated hidden representation back to d_model.
     return ffn_second_layer(h, ffn_params)
 
-# Step 20 - compute_mean_variance (not yet solved)
-# TODO: implement
+# Step 20 - compute_mean_variance
+def compute_mean_variance(x, eps=1e-5):
+    """Compute per-feature mean and variance along the last axis of x."""
+    mean = np.mean(x, axis=-1, keepdims=True)
+    var = np.var(x, axis=-1, keepdims=True)
+
+    return mean, var
 
 # Step 21 - layer_norm_apply (not yet solved)
 # TODO: implement
