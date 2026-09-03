@@ -33,8 +33,21 @@ def decode_ids(ids, vocab):
     # and join them into a single string.
     return "".join(vocab["itos"][i] for i in ids)
 
-# Step 4 - embed_tokens (not yet solved)
-# TODO: implement
+# Step 4 - embed_tokens
+import torch
+
+def embed_tokens(token_ids, token_embedding):
+    """Look up token embedding vectors for a sequence of token ids.
+
+    Args:
+        token_ids: LongTensor of shape (T,).
+        token_embedding: FloatTensor of shape (vocab_size, d_model).
+
+    Returns:
+        FloatTensor of shape (T, d_model).
+    """
+    # Select the embedding row corresponding to each token ID.
+    return token_embedding[token_ids]
 
 # Step 5 - add_positional_embeddings (not yet solved)
 # TODO: implement
