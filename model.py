@@ -986,8 +986,17 @@ def collect_verifier_votes(committee, transcript, model_params, k, base_seed):
 
     return votes
 
-# Step 51 - aggregate_votes_majority (not yet solved)
-# TODO: implement
+# Step 51 - aggregate_votes_majority
+def aggregate_votes_majority(votes):
+    """Aggregate verifier votes using strict majority rule."""
+    accept_count = sum(bool(vote["vote"]) for vote in votes)
+    reject_count = len(votes) - accept_count
+
+    return {
+        "verdict": bool(accept_count > reject_count),
+        "accept_count": accept_count,
+        "reject_count": reject_count,
+    }
 
 # Step 52 - reward_honest_participants (not yet solved)
 # TODO: implement

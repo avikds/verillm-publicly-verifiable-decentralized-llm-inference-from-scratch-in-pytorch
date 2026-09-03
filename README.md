@@ -60,7 +60,7 @@ python scaffold.py
 - [x] **48.** show_tampered_transcript_rejected
 - [x] **49.** sample_verifier_committee
 - [x] **50.** collect_verifier_votes
-- [ ] **51.** aggregate_votes_majority
+- [x] **51.** aggregate_votes_majority
 - [ ] **52.** reward_honest_participants
 - [ ] **53.** slash_worker
 - [ ] **54.** assign_dual_role
