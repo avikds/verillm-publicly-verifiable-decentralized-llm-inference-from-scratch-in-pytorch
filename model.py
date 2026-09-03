@@ -1058,8 +1058,69 @@ def assign_dual_role(node_ids, worker_id, committee_size, seed):
         "committee": committee,
     }
 
-# Step 55 - run_honest_round (not yet solved)
-# TODO: implement
+# Step 55 - run_honest_round
+def run_honest_round(
+    model_params,
+    prompt_ids,
+    num_steps,
+    verifier_ids,
+    worker_id,
+    committee_size,
+    k,
+    seed,
+    balances,
+    reward_worker,
+    reward_verifier,
+):
+    # Run the honest prover and create the public transcript.
+    prover_result = run_prover(
+        model_params,
+        prompt_ids,
+        num_steps,
+    )
+
+    transcript = assemble_public_transcript(
+        prover_result,
+        prompt_ids,
+    )
+
+    # Sample the verifier committee using the public seed.
+    committee = sample_verifier_committee(
+        verifier_ids,
+        committee_size,
+        seed,
+    )
+
+    # Collect independent verifier votes using the same seed as the base seed.
+    votes = collect_verifier_votes(
+        committee,
+        transcript,
+        model_params,
+        k,
+        seed,
+    )
+
+    # Aggregate the votes. Only the boolean verdict is exposed by this
+    # function, as required by the API.
+    vote_result = aggregate_votes_majority(votes)
+    verdict = bool(vote_result["verdict"])
+
+    # Apply rewards based on the final committee verdict.
+    updated_balances = reward_honest_participants(
+        balances,
+        worker_id,
+        votes,
+        verdict,
+        reward_worker,
+        reward_verifier,
+    )
+
+    return {
+        "transcript": transcript,
+        "votes": votes,
+        "verdict": verdict,
+        "balances": updated_balances,
+    }
 
 # Step 56 - run_malicious_round (not yet solved)
 # TODO: implement
