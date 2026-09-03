@@ -68,6 +68,30 @@ python scaffold.py
 - [x] **56.** run_malicious_round
 - [x] **57.** report_end_to_end_verification_cost
 
----
+## Results
 
-Built on Deep-ML.
+```
+vocab size = 18 | prompt ids = [7, 5, 9, 9, 12, 0]
+round-trip decode = 'hello '
+output tokens   = [14, 16, 1, 16, 6, 6]
+merkle root[:8] = b'|\xf8C(K\x9a$/...
+
+honest spot-check accepted? False
+audited positions = [0, 5]
+position 0: commitment_ok=False, token_ok=False
+position 5: commitment_ok=True, token_ok=True
+
+verifier cost fraction (k/N) = 0.333
+detection probability (1 corrupted) = 0.333
+
+tampered transcript rejected = True
+tampered output tokens = [14, 17, 1, 16, 6, 6]
+
+honest verdict = True
+honest balances = {'w0': 10, 0: 0, 1: 1, 2: 1, 3: 0, 4: 0}
+
+malicious verdict = False
+malicious balances = {'w0': -20, 0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
+
+end-to-end verifier cost vs full re-exec baseline 1.0: 1.000
+```
