@@ -24,7 +24,7 @@ python scaffold.py
 - [x] **12.** project_qkv
 - [x] **13.** append_kv_cache
 - [x] **14.** scaled_dot_product_attention_with_cache
-- [ ] **15.** apply_output_projection
+- [x] **15.** apply_output_projection
 - [ ] **16.** single_head_causal_self_attention
 - [ ] **17.** ffn_first_layer_gelu
 - [ ] **18.** ffn_second_layer
