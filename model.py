@@ -373,8 +373,54 @@ def run_prefill(prompt_ids, model_params):
         "next_pos": int(len(prompt_ids)),
     }
 
-# Step 27 - decode_step (not yet solved)
-# TODO: implement
+# Step 27 - decode_step
+def decode_step(prev_token_id, kv_caches, next_pos, model_params):
+    # Convert the previous token ID into a one-token sequence.
+    token_ids = np.asarray([prev_token_id], dtype=int)
+
+    # Embed the token and add its positional embedding at the
+    # current absolute position.
+    hidden = embed_tokens(
+        token_ids,
+        model_params["token_embedding"],
+    )
+    hidden = add_positional_embeddings(
+        hidden,
+        model_params["pos_embedding"],
+        start_pos=next_pos,
+    )
+
+    # Run the token through every transformer block, updating each
+    # layer's KV cache. The current position is the query offset.
+    for i, block_params in enumerate(model_params["blocks"]):
+        hidden, kv_caches[i] = transformer_block(
+            hidden,
+            block_params,
+            kv_caches[i],
+            query_offset=next_pos,
+        )
+
+    # Apply the final layer normalization.
+    hidden = layer_norm_apply(
+        hidden,
+        model_params["ln_f"],
+    )
+
+    # Project the final hidden state to vocabulary logits.
+    logits = lm_head_logits(
+        hidden,
+        model_params["lm_head"],
+    )
+
+    # Select the next token greedily from the final logits row.
+    next_token = greedy_next_token(logits)
+
+    return {
+        "next_token": next_token,
+        "logits": logits[-1],
+        "kv_caches": kv_caches,
+        "next_pos": int(next_pos + 1),
+    }
 
 # Step 28 - generate_with_state_log (not yet solved)
 # TODO: implement
