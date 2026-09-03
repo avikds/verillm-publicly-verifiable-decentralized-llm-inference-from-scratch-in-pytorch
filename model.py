@@ -697,8 +697,30 @@ def sample_audit_positions(seed, num_steps, k):
     # Return positions in canonical ascending order.
     return sorted(positions)
 
-# Step 40 - reexecute_audited_step (not yet solved)
-# TODO: implement
+# Step 40 - reexecute_audited_step
+def reexecute_audited_step(model_params, prior_kv_cache, prior_token):
+    # Infer the absolute position from the length of the first layer's
+    # cached keys. An empty cache corresponds to position 0.
+    if prior_kv_cache:
+        first_k = prior_kv_cache[0]["k"]
+        next_pos = 0 if first_k is None else first_k.shape[0]
+    else:
+        next_pos = 0
+
+    # Re-execute exactly one decode step from the committed prior state.
+    step = decode_step(
+        prior_token,
+        prior_kv_cache,
+        next_pos,
+        model_params,
+    )
+
+    return {
+        "hidden": step.get("hidden"),
+        "logits": step["logits"],
+        "token": int(step["next_token"]),
+        "kv_cache_after": step["kv_caches"],
+    }
 
 # Step 41 - recompute_step_commitment (not yet solved)
 # TODO: implement

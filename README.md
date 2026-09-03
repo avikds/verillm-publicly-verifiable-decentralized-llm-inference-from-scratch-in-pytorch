@@ -49,7 +49,7 @@ python scaffold.py
 - [x] **37.** run_prover
 - [x] **38.** assemble_public_transcript
 - [x] **39.** sample_audit_positions
-- [ ] **40.** reexecute_audited_step
+- [x] **40.** reexecute_audited_step
 - [ ] **41.** recompute_step_commitment
 - [ ] **42.** check_commitment_against_proof
 - [ ] **43.** check_token_matches_claim
