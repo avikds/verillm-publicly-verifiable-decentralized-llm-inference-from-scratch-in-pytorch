@@ -182,8 +182,29 @@ def apply_output_projection(context, attn_params):
         attn_params.get("bo"),
     )
 
-# Step 16 - single_head_causal_self_attention (not yet solved)
-# TODO: implement
+# Step 16 - single_head_causal_self_attention
+def single_head_causal_self_attention(x, attn_params, kv_cache, query_offset=0):
+    """Single-head causal self-attention with KV-cache update.
+
+    Returns (out, kv_cache) where out has shape (T, d_model).
+    """
+    # Project hidden states into queries, keys, and values.
+    q, k, v = project_qkv(x, attn_params)
+
+    # Append the newly computed keys and values to the cache.
+    kv_cache = append_kv_cache(kv_cache, k, v)
+
+    # Compute causal attention against the complete KV cache.
+    context = scaled_dot_product_attention_with_cache(
+        q,
+        kv_cache,
+        query_offset=query_offset,
+    )
+
+    # Project the attention context back to model dimension.
+    out = apply_output_projection(context, attn_params)
+
+    return out, kv_cache
 
 # Step 17 - ffn_first_layer_gelu (not yet solved)
 # TODO: implement
