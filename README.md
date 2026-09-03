@@ -45,7 +45,7 @@ python scaffold.py
 - [x] **33.** build_merkle_tree
 - [x] **34.** merkle_root
 - [x] **35.** merkle_inclusion_proof
-- [ ] **36.** verify_merkle_inclusion_proof
+- [x] **36.** verify_merkle_inclusion_proof
 - [ ] **37.** run_prover
 - [ ] **38.** assemble_public_transcript
 - [ ] **39.** sample_audit_positions

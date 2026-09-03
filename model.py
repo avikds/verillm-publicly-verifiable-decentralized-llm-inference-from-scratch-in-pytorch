@@ -606,8 +606,23 @@ def merkle_inclusion_proof(tree, leaf_index):
 
     return proof
 
-# Step 36 - verify_merkle_inclusion_proof (not yet solved)
-# TODO: implement
+# Step 36 - verify_merkle_inclusion_proof
+def verify_merkle_inclusion_proof(leaf, leaf_index, proof, root):
+    # Reconstruct the Merkle path from the leaf up to the root.
+    current = leaf
+
+    for entry in proof:
+        sibling = entry["sibling"]
+        side = entry["side"]
+
+        if side == "left":
+            current = hash_pair(sibling, current)
+        elif side == "right":
+            current = hash_pair(current, sibling)
+        else:
+            return False
+
+    return current == root
 
 # Step 37 - run_prover (not yet solved)
 # TODO: implement
