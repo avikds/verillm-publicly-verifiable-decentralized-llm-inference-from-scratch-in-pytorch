@@ -259,8 +259,11 @@ def layer_norm_apply(x, ln_params, eps=1e-5):
     # Apply the learned affine transformation.
     return normalized * ln_params["gamma"] + ln_params["beta"]
 
-# Step 22 - residual_add_and_norm (not yet solved)
-# TODO: implement
+# Step 22 - residual_add_and_norm
+def residual_add_and_norm(x, sublayer_output, ln_params, eps=1e-5):
+    # Add the residual connection, then apply layer normalization.
+    residual = x + sublayer_output
+    return layer_norm_apply(residual, ln_params, eps=eps)
 
 # Step 23 - transformer_block (not yet solved)
 # TODO: implement
