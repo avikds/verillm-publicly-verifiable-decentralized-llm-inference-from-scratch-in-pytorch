@@ -948,8 +948,43 @@ def sample_verifier_committee(verifier_ids, committee_size, seed):
     # Sample distinct verifier IDs without modifying the input list.
     return rng.sample(list(verifier_ids), committee_size)
 
-# Step 50 - collect_verifier_votes (not yet solved)
-# TODO: implement
+# Step 50 - collect_verifier_votes
+def collect_verifier_votes(committee, transcript, model_params, k, base_seed):
+    """Collect independent spot-check votes from every verifier."""
+    votes = []
+
+    for verifier_id in committee:
+        num_steps = len(transcript.get("step_states", []))
+
+        # Empty transcript or zero audit budget means there are no audits
+        # to perform, so the verifier accepts trivially.
+        if k <= 0 or num_steps == 0:
+            result = {
+                "accept": True,
+                "audited_positions": [],
+                "per_audit": [],
+            }
+        else:
+            # Derive a deterministic verifier-specific seed.
+            verifier_seed = base_seed + int(verifier_id)
+
+            # Never request more audits than available decode steps.
+            audit_k = min(k, num_steps)
+
+            result = run_spot_check_verification(
+                transcript,
+                model_params,
+                seed=verifier_seed,
+                k=audit_k,
+            )
+
+        votes.append({
+            "verifier_id": verifier_id,
+            "vote": bool(result["accept"]),
+            "result": result,
+        })
+
+    return votes
 
 # Step 51 - aggregate_votes_majority (not yet solved)
 # TODO: implement
