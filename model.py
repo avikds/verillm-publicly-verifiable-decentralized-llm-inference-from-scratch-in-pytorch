@@ -206,11 +206,31 @@ def single_head_causal_self_attention(x, attn_params, kv_cache, query_offset=0):
 
     return out, kv_cache
 
-# Step 17 - ffn_first_layer_gelu (not yet solved)
-# TODO: implement
+# Step 17 - ffn_first_layer_gelu
+def ffn_first_layer_gelu(x, ffn_params):
+    # Apply the first FFN linear projection.
+    h = linear_projection(
+        x,
+        ffn_params["W1"],
+        ffn_params.get("b1"),
+    )
 
-# Step 18 - ffn_second_layer (not yet solved)
-# TODO: implement
+    # Apply the GELU activation elementwise using the standard
+    # tanh-based approximation.
+    return 0.5 * h * (
+        1.0 + np.tanh(
+            np.sqrt(2.0 / np.pi) * (h + 0.044715 * np.power(h, 3))
+        )
+    )
+
+# Step 18 - ffn_second_layer
+def ffn_second_layer(h, ffn_params):
+    # Project the FFN hidden activations back to the model dimension.
+    return linear_projection(
+        h,
+        ffn_params["W2"],
+        ffn_params.get("b2"),
+    )
 
 # Step 19 - position_wise_feed_forward (not yet solved)
 # TODO: implement
