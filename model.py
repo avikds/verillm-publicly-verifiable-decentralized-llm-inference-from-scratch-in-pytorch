@@ -248,8 +248,16 @@ def compute_mean_variance(x, eps=1e-5):
 
     return mean, var
 
-# Step 21 - layer_norm_apply (not yet solved)
-# TODO: implement
+# Step 21 - layer_norm_apply
+def layer_norm_apply(x, ln_params, eps=1e-5):
+    """Normalize x over its last axis and apply gamma, beta."""
+    mean, var = compute_mean_variance(x, eps=eps)
+
+    # Normalize along the last axis.
+    normalized = (x - mean) / np.sqrt(var + eps)
+
+    # Apply the learned affine transformation.
+    return normalized * ln_params["gamma"] + ln_params["beta"]
 
 # Step 22 - residual_add_and_norm (not yet solved)
 # TODO: implement

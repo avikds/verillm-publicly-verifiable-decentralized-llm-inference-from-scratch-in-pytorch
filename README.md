@@ -30,7 +30,7 @@ python scaffold.py
 - [x] **18.** ffn_second_layer
 - [x] **19.** position_wise_feed_forward
 - [x] **20.** compute_mean_variance
-- [ ] **21.** layer_norm_apply
+- [x] **21.** layer_norm_apply
 - [ ] **22.** residual_add_and_norm
 - [ ] **23.** transformer_block
 - [ ] **24.** lm_head_logits
