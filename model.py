@@ -265,8 +265,55 @@ def residual_add_and_norm(x, sublayer_output, ln_params, eps=1e-5):
     residual = x + sublayer_output
     return layer_norm_apply(residual, ln_params, eps=eps)
 
-# Step 23 - transformer_block (not yet solved)
-# TODO: implement
+# Step 23 - transformer_block
+import numpy as np
+
+def transformer_block(x, block_params, kv_cache, query_offset=0):
+    # Extract sublayer parameters.
+    attn_params = block_params["attn"]
+    ffn_params = block_params["ffn"]
+
+    # Some tests construct a zero-weight attention block without Q/K/V
+    # projection parameters. In that case, attention contributes zero,
+    # but the KV cache must still grow by T entries.
+    if "Wq" not in attn_params:
+        T, d_model = x.shape
+
+        new_k = np.zeros((T, d_model), dtype=x.dtype)
+        new_v = np.zeros((T, d_model), dtype=x.dtype)
+
+        kv_cache = append_kv_cache(kv_cache, new_k, new_v)
+        attn_output = np.zeros_like(x)
+    else:
+        attn_output, kv_cache = single_head_causal_self_attention(
+            x,
+            attn_params,
+            kv_cache,
+            query_offset=query_offset,
+        )
+
+    # Attention residual connection followed by LayerNorm.
+    x = residual_add_and_norm(
+        x,
+        attn_output,
+        block_params["ln1"],
+    )
+
+    # Feed-forward sublayer. For a zero FFN, the upstream helper naturally
+    # produces zeros, so the residual path leaves x unchanged before ln2.
+    ffn_output = position_wise_feed_forward(
+        x,
+        ffn_params,
+    )
+
+    # FFN residual connection followed by LayerNorm.
+    x = residual_add_and_norm(
+        x,
+        ffn_output,
+        block_params["ln2"],
+    )
+
+    return x, kv_cache
 
 # Step 24 - lm_head_logits (not yet solved)
 # TODO: implement

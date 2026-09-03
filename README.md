@@ -32,7 +32,7 @@ python scaffold.py
 - [x] **20.** compute_mean_variance
 - [x] **21.** layer_norm_apply
 - [x] **22.** residual_add_and_norm
-- [ ] **23.** transformer_block
+- [x] **23.** transformer_block
 - [ ] **24.** lm_head_logits
 - [ ] **25.** greedy_next_token
 - [ ] **26.** run_prefill
