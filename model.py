@@ -503,8 +503,31 @@ def hash_tensor(tensor):
 
     return hashlib.sha256(payload).digest()
 
-# Step 30 - commit_decode_step (not yet solved)
-# TODO: implement
+# Step 30 - commit_decode_step
+import hashlib
+import numpy as np
+
+def commit_decode_step(step_state):
+    # Hash each scalar/token field using the same canonical tensor hashing
+    # primitive used for arrays.
+    field_hashes = [
+        hash_tensor(np.asarray(step_state["step_index"])),
+        hash_tensor(np.asarray(step_state["input_token"])),
+        hash_tensor(np.asarray(step_state["next_token"])),
+        hash_tensor(step_state["logits"]),
+    ]
+
+    # Commit to every layer's K and V cache in deterministic list order.
+    for layer_cache in step_state["kv_caches"]:
+        field_hashes.append(hash_tensor(layer_cache["k"]))
+        field_hashes.append(hash_tensor(layer_cache["v"]))
+
+    field_hashes.append(
+        hash_tensor(np.asarray(step_state["next_pos"]))
+    )
+
+    # Combine all field digests into the final 32-byte leaf digest.
+    return hashlib.sha256(b"".join(field_hashes)).digest()
 
 # Step 31 - hash_pair (not yet solved)
 # TODO: implement
