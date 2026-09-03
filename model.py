@@ -422,11 +422,86 @@ def decode_step(prev_token_id, kv_caches, next_pos, model_params):
         "next_pos": int(next_pos + 1),
     }
 
-# Step 28 - generate_with_state_log (not yet solved)
-# TODO: implement
+# Step 28 - generate_with_state_log
+def generate_with_state_log(prompt_ids, model_params, num_new_tokens):
+    """Run prefill, then autoregressively decode num_new_tokens tokens,
+    logging each step's state.
+    """
+    # Nothing to generate.
+    if num_new_tokens <= 0:
+        return {
+            "generated_tokens": [],
+            "step_states": [],
+        }
 
-# Step 29 - hash_tensor (not yet solved)
-# TODO: implement
+    # Run the prompt through the model to initialize hidden states and KV caches.
+    prefill = run_prefill(prompt_ids, model_params)
+
+    hidden = prefill["hidden"]
+    kv_caches = prefill["kv_caches"]
+    next_pos = prefill["next_pos"]
+
+    # The first generated token is produced from the final prefill position.
+    final_hidden = hidden[-1]
+    first_logits = lm_head_logits(
+        final_hidden,
+        model_params["lm_head"],
+    )
+    first_token = greedy_next_token(first_logits)
+
+    # Record the prefill-derived first generation step.
+    step_states = [{
+        "next_token": first_token,
+        "logits": first_logits,
+        "kv_caches": kv_caches,
+        "next_pos": int(next_pos),
+    }]
+    generated_tokens = [first_token]
+
+    # Generate all remaining tokens autoregressively.
+    prev_token_id = first_token
+
+    for _ in range(num_new_tokens - 1):
+        step_state = decode_step(
+            prev_token_id,
+            kv_caches,
+            next_pos,
+            model_params,
+        )
+
+        generated_tokens.append(step_state["next_token"])
+        step_states.append(step_state)
+
+        prev_token_id = step_state["next_token"]
+        kv_caches = step_state["kv_caches"]
+        next_pos = step_state["next_pos"]
+
+    return {
+        "generated_tokens": generated_tokens,
+        "step_states": step_states,
+    }
+
+# Step 29 - hash_tensor
+import hashlib
+
+def hash_tensor(tensor):
+    """Return a 32-byte SHA-256 digest of the tensor's shape, dtype, and contents."""
+    arr = np.asarray(tensor)
+
+    # Convert to a contiguous representation so the raw bytes are
+    # deterministic regardless of the original memory layout.
+    arr = np.ascontiguousarray(arr)
+
+    # Include shape and dtype explicitly, followed by the raw data bytes.
+    payload = (
+        repr(arr.shape).encode("utf-8")
+        + b"|"
+        + arr.dtype.str.encode("utf-8")
+        + b"|"
+        + arr.tobytes()
+    )
+
+    return hashlib.sha256(payload).digest()
 
 # Step 30 - commit_decode_step (not yet solved)
 # TODO: implement

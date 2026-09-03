@@ -37,8 +37,8 @@ python scaffold.py
 - [x] **25.** greedy_next_token
 - [x] **26.** run_prefill
 - [x] **27.** decode_step
-- [ ] **28.** generate_with_state_log
-- [ ] **29.** hash_tensor
+- [x] **28.** generate_with_state_log
+- [x] **29.** hash_tensor
 - [ ] **30.** commit_decode_step
 - [ ] **31.** hash_pair
 - [ ] **32.** build_merkle_level
