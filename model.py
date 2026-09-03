@@ -1152,7 +1152,7 @@ def run_malicious_round(
     tamper_position,
     new_token,
 ):
-    # Generate the honest worker transcript.
+    # Generate the honest prover transcript.
     prover_result = run_prover(
         model_params,
         prompt_ids,
@@ -1164,7 +1164,8 @@ def run_malicious_round(
         prompt_ids,
     )
 
-    # Change only the claimed output token; commitments remain unchanged.
+    # Tamper with one claimed output token while preserving the
+    # original Merkle commitments.
     tampered_transcript = tamper_transcript_flip_token(
         transcript,
         tamper_position,
@@ -1187,11 +1188,11 @@ def run_malicious_round(
         seed,
     )
 
-    # Aggregate votes by strict majority.
+    # Aggregate the votes using strict majority.
     aggregated = aggregate_votes_majority(votes)
     verdict = bool(aggregated["verdict"])
 
-    # Slash the worker only when the committee rejects.
+    # Slash the worker only if the committee rejects.
     updated_balances = dict(balances)
 
     if not verdict:
