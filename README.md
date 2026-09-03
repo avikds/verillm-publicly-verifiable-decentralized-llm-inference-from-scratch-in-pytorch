@@ -35,7 +35,7 @@ python scaffold.py
 - [x] **23.** transformer_block
 - [x] **24.** lm_head_logits
 - [x] **25.** greedy_next_token
-- [ ] **26.** run_prefill
+- [x] **26.** run_prefill
 - [ ] **27.** decode_step
 - [ ] **28.** generate_with_state_log
 - [ ] **29.** hash_tensor
