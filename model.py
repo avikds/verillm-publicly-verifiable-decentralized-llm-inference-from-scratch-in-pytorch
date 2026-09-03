@@ -122,8 +122,10 @@ def softmax_attention_weights(masked_scores):
         where=row_sums != 0,
     )
 
-# Step 11 - weighted_value_sum (not yet solved)
-# TODO: implement
+# Step 11 - weighted_value_sum
+def weighted_value_sum(attn_weights, values):
+    # Weighted sum of value vectors for each query position.
+    return attn_weights @ values
 
 # Step 12 - project_qkv (not yet solved)
 # TODO: implement
