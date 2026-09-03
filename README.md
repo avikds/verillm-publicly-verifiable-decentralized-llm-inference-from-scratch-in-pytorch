@@ -66,7 +66,7 @@ python scaffold.py
 - [x] **54.** assign_dual_role
 - [x] **55.** run_honest_round
 - [x] **56.** run_malicious_round
-- [ ] **57.** report_end_to_end_verification_cost
+- [x] **57.** report_end_to_end_verification_cost
 
 ---
 

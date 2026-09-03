@@ -1212,6 +1212,24 @@ def run_malicious_round(
         "tampered_transcript": tampered_transcript,
     }
 
-# Step 57 - report_end_to_end_verification_cost (not yet solved)
-# TODO: implement
+# Step 57 - report_end_to_end_verification_cost
+def report_end_to_end_verification_cost(num_steps, committee_size, k):
+    """Summarize spot-check verification cost relative to full re-execution."""
+    # Cost paid by a single verifier.
+    per_verifier_fraction = verifier_cost_fraction(
+        num_steps,
+        k,
+    )
+
+    # Aggregate committee cost relative to one full execution.
+    committee_fraction = per_verifier_fraction * committee_size
+
+    # Full re-execution is the baseline cost.
+    full_reexec_fraction = 1.0
+
+    return {
+        "per_verifier_fraction": float(per_verifier_fraction),
+        "committee_fraction": float(committee_fraction),
+        "full_reexec_fraction": full_reexec_fraction,
+    }
 
