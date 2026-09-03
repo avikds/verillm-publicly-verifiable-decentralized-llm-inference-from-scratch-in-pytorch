@@ -438,44 +438,44 @@ def decode_step(prev_token_id, kv_caches, next_pos, model_params):
     }
 
 # Step 28 - generate_with_state_log
+import copy
+
 def generate_with_state_log(prompt_ids, model_params, num_new_tokens):
-    """Run prefill, then autoregressively decode num_new_tokens tokens,
-    logging each step's state.
-    """
-    # Nothing to generate.
+    """Run prefill, then decode num_new_tokens tokens, logging each step's state."""
     if num_new_tokens <= 0:
         return {
             "generated_tokens": [],
             "step_states": [],
         }
 
-    # Run the prompt through the model to initialize hidden states and KV caches.
+    # Prefill establishes the initial KV caches and absolute position.
     prefill = run_prefill(prompt_ids, model_params)
 
     hidden = prefill["hidden"]
     kv_caches = prefill["kv_caches"]
-    next_pos = prefill["next_pos"]
+    next_pos = int(prefill["next_pos"])
 
-    # The first generated token is produced from the final prefill position.
-    final_hidden = hidden[-1]
+    # The first generated token comes from the final prefill hidden state.
     first_logits = lm_head_logits(
-        final_hidden,
+        hidden[-1],
         model_params["lm_head"],
     )
-    first_token = greedy_next_token(first_logits)
+    first_token = int(greedy_next_token(first_logits))
 
-    # Record the prefill-derived first generation step.
-    step_states = [{
-        "next_token": first_token,
-        "logits": first_logits,
-        "kv_caches": kv_caches,
-        "next_pos": int(next_pos),
-    }]
     generated_tokens = [first_token]
 
-    # Generate all remaining tokens autoregressively.
+    # IMPORTANT:
+    # Store an independent snapshot of the prefill KV cache.
+    step_states = [{
+        "next_token": first_token,
+        "logits": np.array(first_logits, copy=True),
+        "kv_caches": copy.deepcopy(kv_caches),
+        "next_pos": next_pos,
+    }]
+
     prev_token_id = first_token
 
+    # Each subsequent token is produced by exactly one decode step.
     for _ in range(num_new_tokens - 1):
         step_state = decode_step(
             prev_token_id,
@@ -484,12 +484,23 @@ def generate_with_state_log(prompt_ids, model_params, num_new_tokens):
             model_params,
         )
 
-        generated_tokens.append(step_state["next_token"])
-        step_states.append(step_state)
+        generated_token = int(step_state["next_token"])
 
-        prev_token_id = step_state["next_token"]
+        # Snapshot every mutable/array-valued component so later cache
+        # updates cannot modify this historical transcript entry.
+        logged_state = {
+            "next_token": generated_token,
+            "logits": np.array(step_state["logits"], copy=True),
+            "kv_caches": copy.deepcopy(step_state["kv_caches"]),
+            "next_pos": int(step_state["next_pos"]),
+        }
+
+        generated_tokens.append(generated_token)
+        step_states.append(logged_state)
+
+        prev_token_id = generated_token
         kv_caches = step_state["kv_caches"]
-        next_pos = step_state["next_pos"]
+        next_pos = int(step_state["next_pos"])
 
     return {
         "generated_tokens": generated_tokens,
