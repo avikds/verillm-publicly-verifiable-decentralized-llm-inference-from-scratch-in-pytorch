@@ -23,7 +23,7 @@ python scaffold.py
 - [x] **11.** weighted_value_sum
 - [x] **12.** project_qkv
 - [x] **13.** append_kv_cache
-- [ ] **14.** scaled_dot_product_attention_with_cache
+- [x] **14.** scaled_dot_product_attention_with_cache
 - [ ] **15.** apply_output_projection
 - [ ] **16.** single_head_causal_self_attention
 - [ ] **17.** ffn_first_layer_gelu
