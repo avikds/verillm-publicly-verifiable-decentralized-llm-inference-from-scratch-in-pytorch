@@ -722,8 +722,10 @@ def reexecute_audited_step(model_params, prior_kv_cache, prior_token):
         "kv_cache_after": step["kv_caches"],
     }
 
-# Step 41 - recompute_step_commitment (not yet solved)
-# TODO: implement
+# Step 41 - recompute_step_commitment
+def recompute_step_commitment(reexec_state, prior_kv_cache):
+    # Reuse the exact same commitment primitive used by the prover.
+    return commit_decode_step(reexec_state)
 
 # Step 42 - check_commitment_against_proof (not yet solved)
 # TODO: implement
