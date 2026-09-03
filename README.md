@@ -22,7 +22,7 @@ python scaffold.py
 - [x] **10.** softmax_attention_weights
 - [x] **11.** weighted_value_sum
 - [x] **12.** project_qkv
-- [ ] **13.** append_kv_cache
+- [x] **13.** append_kv_cache
 - [ ] **14.** scaled_dot_product_attention_with_cache
 - [ ] **15.** apply_output_projection
 - [ ] **16.** single_head_causal_self_attention
