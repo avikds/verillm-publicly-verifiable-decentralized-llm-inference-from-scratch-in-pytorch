@@ -266,8 +266,6 @@ def residual_add_and_norm(x, sublayer_output, ln_params, eps=1e-5):
     return layer_norm_apply(residual, ln_params, eps=eps)
 
 # Step 23 - transformer_block
-import numpy as np
-
 def transformer_block(x, block_params, kv_cache, query_offset=0):
     # Extract sublayer parameters.
     attn_params = block_params["attn"]
