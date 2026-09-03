@@ -907,8 +907,38 @@ def verifier_cost_fraction(num_steps, k):
     # Fraction of the full decode work that is re-executed by the verifier.
     return float(k / num_steps)
 
-# Step 48 - show_tampered_transcript_rejected (not yet solved)
-# TODO: implement
+# Step 48 - show_tampered_transcript_rejected
+def show_tampered_transcript_rejected(
+    transcript,
+    model_params,
+    position,
+    new_token,
+    seed,
+    k,
+):
+    # Create a tampered copy without modifying the original transcript.
+    tampered_transcript = tamper_transcript_flip_token(
+        transcript,
+        position,
+        new_token,
+    )
+
+    # Run spot-check verification on the tampered transcript.
+    result = run_spot_check_verification(
+        tampered_transcript,
+        model_params,
+        seed,
+        k,
+    )
+
+    # Verification is rejected exactly when the verifier does not accept.
+    rejected = bool(not result["accept"])
+
+    return {
+        "tampered_transcript": tampered_transcript,
+        "result": result,
+        "rejected": rejected,
+    }
 
 # Step 49 - sample_verifier_committee (not yet solved)
 # TODO: implement
