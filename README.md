@@ -1,0 +1,2 @@
+# verillm-publicly-verifiable-decentralized-llm-inference-from-scratch-in-pytorch
+Build a minimal GPT-style transformer with a KV cache from scratch, then wrap its inference in a Merkle-commitment and spot-check protocol that lets untrusted workers serve LLM outputs verifiably. Ends with a decentralized committee simulation with rewards and slashing, quantifying detection probability and verifier cost versus re-execution.
