@@ -385,23 +385,22 @@ def run_prefill(prompt_ids, model_params):
 
 # Step 27 - decode_step
 def decode_step(prev_token_id, kv_caches, next_pos, model_params):
-    # Convert the previous token ID into a one-token sequence.
+    # Consume exactly one token.
     token_ids = np.asarray([prev_token_id], dtype=int)
 
-    # Embed the token and add its positional embedding at the
-    # current absolute position.
+    # Embed the token and add its absolute positional embedding.
     hidden = embed_tokens(
         token_ids,
         model_params["token_embedding"],
     )
+
     hidden = add_positional_embeddings(
         hidden,
         model_params["pos_embedding"],
         start_pos=next_pos,
     )
 
-    # Run the token through every transformer block, updating each
-    # layer's KV cache. The current position is the query offset.
+    # Run the token through every transformer block and update each KV cache.
     for i, block_params in enumerate(model_params["blocks"]):
         hidden, kv_caches[i] = transformer_block(
             hidden,
@@ -410,23 +409,29 @@ def decode_step(prev_token_id, kv_caches, next_pos, model_params):
             query_offset=next_pos,
         )
 
-    # Apply the final layer normalization.
-    hidden = layer_norm_apply(
-        hidden,
-        model_params["ln_f"],
-    )
+    # Apply the final layer norm when the model provides one.
+    if "ln_f" in model_params:
+        hidden = layer_norm_apply(
+            hidden,
+            model_params["ln_f"],
+        )
+    elif "final_ln" in model_params:
+        hidden = layer_norm_apply(
+            hidden,
+            model_params["final_ln"],
+        )
 
-    # Project the final hidden state to vocabulary logits.
+    # Project to vocabulary logits.
     logits = lm_head_logits(
         hidden,
         model_params["lm_head"],
     )
 
-    # Select the next token greedily from the final logits row.
+    # Greedy next-token selection.
     next_token = greedy_next_token(logits)
 
     return {
-        "next_token": next_token,
+        "next_token": int(next_token),
         "logits": logits[-1],
         "kv_caches": kv_caches,
         "next_pos": int(next_pos + 1),
@@ -1147,7 +1152,7 @@ def run_malicious_round(
     tamper_position,
     new_token,
 ):
-    # Produce an honest prover transcript first.
+    # Generate the honest worker transcript.
     prover_result = run_prover(
         model_params,
         prompt_ids,
@@ -1159,22 +1164,21 @@ def run_malicious_round(
         prompt_ids,
     )
 
-    # Tamper only with the claimed output token. The original Merkle
-    # commitments remain unchanged.
+    # Change only the claimed output token; commitments remain unchanged.
     tampered_transcript = tamper_transcript_flip_token(
         transcript,
         tamper_position,
         new_token,
     )
 
-    # Select the verifier committee deterministically.
+    # Sample the verifier committee.
     committee = sample_verifier_committee(
         verifier_ids,
         committee_size,
         seed,
     )
 
-    # Have every selected verifier independently audit the tampered transcript.
+    # Collect verifier votes on the tampered transcript.
     votes = collect_verifier_votes(
         committee,
         tampered_transcript,
@@ -1183,11 +1187,11 @@ def run_malicious_round(
         seed,
     )
 
-    # Aggregate the committee's votes.
+    # Aggregate votes by strict majority.
     aggregated = aggregate_votes_majority(votes)
     verdict = bool(aggregated["verdict"])
 
-    # Slash the worker only when the committee rejects the submission.
+    # Slash the worker only when the committee rejects.
     updated_balances = dict(balances)
 
     if not verdict:
