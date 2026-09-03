@@ -571,8 +571,40 @@ def merkle_root(tree):
     # The root is the single digest at the top level.
     return tree[-1][0]
 
-# Step 35 - merkle_inclusion_proof (not yet solved)
-# TODO: implement
+# Step 35 - merkle_inclusion_proof
+def merkle_inclusion_proof(tree, leaf_index):
+    # A single-leaf tree has no sibling nodes on the path to the root.
+    if len(tree) <= 1:
+        return []
+
+    proof = []
+    index = leaf_index
+
+    # Walk upward from the leaf level to the level below the root.
+    for level in tree[:-1]:
+        # The sibling is the adjacent node. If the current node is
+        # the right child, its sibling is on the left; otherwise it is
+        # on the right.
+        if index % 2 == 0:
+            sibling_index = index + 1
+            is_right = True
+        else:
+            sibling_index = index - 1
+            is_right = False
+
+        # Handle the duplicated-last-node case for odd-sized levels.
+        if sibling_index >= len(level):
+            sibling_index = index
+
+        proof.append({
+            "sibling": level[sibling_index],
+            "is_right": is_right,
+        })
+
+        # Move to the corresponding parent index.
+        index //= 2
+
+    return proof
 
 # Step 36 - verify_merkle_inclusion_proof (not yet solved)
 # TODO: implement
