@@ -873,8 +873,34 @@ def tamper_transcript_flip_token(transcript, position, new_token):
 
     return tampered
 
-# Step 46 - detection_probability (not yet solved)
-# TODO: implement
+# Step 46 - detection_probability
+import math
+
+def detection_probability(num_steps, num_corrupted, k):
+    # No corrupted steps or no audits means detection is impossible.
+    if num_corrupted <= 0 or k <= 0:
+        return 0.0
+
+    # If every step is corrupted, every non-empty audit detects corruption.
+    if num_corrupted >= num_steps:
+        return 1.0
+
+    # Auditing more steps than exist is equivalent to auditing all steps.
+    k = min(k, num_steps)
+
+    num_clean = num_steps - num_corrupted
+
+    # If we audit more positions than there are clean steps, at least
+    # one corrupted step must be selected.
+    if k > num_clean:
+        return 1.0
+
+    # P(no detection) = C(num_clean, k) / C(num_steps, k)
+    probability_no_detection = (
+        math.comb(num_clean, k) / math.comb(num_steps, k)
+    )
+
+    return float(1.0 - probability_no_detection)
 
 # Step 47 - verifier_cost_fraction (not yet solved)
 # TODO: implement
