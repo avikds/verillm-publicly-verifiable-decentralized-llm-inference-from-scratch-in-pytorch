@@ -77,8 +77,23 @@ def scale_attention_scores(scores, d_head):
     # Scale the raw attention scores by 1 / sqrt(d_head).
     return scores / np.sqrt(d_head)
 
-# Step 9 - apply_causal_mask (not yet solved)
-# TODO: implement
+# Step 9 - apply_causal_mask
+def apply_causal_mask(scores, query_offset=0):
+    # Work on a copy so the input array is not modified in place.
+    masked_scores = np.array(scores, copy=True)
+
+    Tq, Tk = masked_scores.shape
+
+    # Absolute position of each query: query_offset + i.
+    query_positions = query_offset + np.arange(Tq)
+
+    # Key position j is invalid when j > absolute query position.
+    key_positions = np.arange(Tk)
+    mask = key_positions[None, :] > query_positions[:, None]
+
+    masked_scores[mask] = -np.inf
+
+    return masked_scores
 
 # Step 10 - softmax_attention_weights (not yet solved)
 # TODO: implement

@@ -18,7 +18,7 @@ python scaffold.py
 - [x] **6.** linear_projection
 - [x] **7.** compute_attention_scores
 - [x] **8.** scale_attention_scores
-- [ ] **9.** apply_causal_mask
+- [x] **9.** apply_causal_mask
 - [ ] **10.** softmax_attention_weights
 - [ ] **11.** weighted_value_sum
 - [ ] **12.** project_qkv
